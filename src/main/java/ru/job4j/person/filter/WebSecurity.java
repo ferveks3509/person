@@ -13,6 +13,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.context.annotation.Bean;
 import ru.job4j.person.service.UserDetailsServiceImpl;
 
+import static ru.job4j.person.filter.JWTAuthenticationFilter.CREATE_URL;
 import static ru.job4j.person.filter.JWTAuthenticationFilter.SIGN_UP_URL;
 
 @EnableWebSecurity
@@ -28,7 +29,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().authorizeRequests()
-                .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
+                .antMatchers(HttpMethod.POST, SIGN_UP_URL, CREATE_URL).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))

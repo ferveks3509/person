@@ -17,6 +17,9 @@ public class UserController {
 
     @PostMapping("/sign-up")
     public void signUp(@RequestBody Person person) {
+        if (person.getLogin() == null || person.getPassword() == null) {
+            throw new NullPointerException("login or password cant not be null");
+        }
         person.setPassword(encoder.encode(person.getPassword()));
         users.save(person);
     }
