@@ -9,6 +9,7 @@ import ru.job4j.person.model.Person;
 import ru.job4j.person.repository.PersonRepository;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.List;
 
 @AllArgsConstructor
@@ -35,12 +36,9 @@ public class PersonController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Person> create(@RequestBody Person person) {
+    public ResponseEntity<Person> create(@Valid @RequestBody Person person) {
         if (person.getLogin().length() < 3 || person.getPassword().length() < 3) {
             throw new IllegalArgumentException("Invalid password. Length must be more than 5 char");
-        }
-        if (person.getPassword() == null || person.getLogin() == null) {
-            throw new NullPointerException("Login or password mustn't be empty");
         }
         return new ResponseEntity<Person>(
                 this.personRepository.save(person),
@@ -49,8 +47,8 @@ public class PersonController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<Void> update(@RequestBody Person person) {
-        if (person.getPassword() == null || person.getLogin() == null) {
+    public ResponseEntity<Void> update(@Valid @RequestBody Person person) {
+        if (person == null) {
             throw new NullPointerException("Login or password mustn't be empty");
         }
         this.personRepository.save(person);
