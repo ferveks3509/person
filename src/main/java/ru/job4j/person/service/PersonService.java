@@ -1,7 +1,14 @@
 package ru.job4j.person.service;
 
-import org.springframework.stereotype.Service;
+import ru.job4j.person.model.Person;
 
-@Service
-public class PersonService {
+import java.util.Collection;
+import java.util.Optional;
+
+public interface PersonService {
+    Collection<Person> findAll();
+
+    Person save(Person person);
+    Optional<Person> findById(int id);
+    void delete(Person person);
 }

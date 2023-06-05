@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.job4j.person.model.Person;
-import ru.job4j.person.repository.PersonRepository;
+import ru.job4j.person.service.PersonService;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -16,11 +16,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/person")
 public class PersonController {
-    private final PersonRepository personRepository;
+    private final PersonService personService;
+
 
     @GetMapping("/")
     public List<Person> findAll() {
-        return (List<Person>) this.personRepository.findAll();
+        return (List<Person>) this.personService.findAll();
     }
 
     @GetMapping("/{id}")
@@ -28,7 +29,7 @@ public class PersonController {
         if (id == 0 || id < 0) {
             throw new IllegalArgumentException("id cant zero or negative");
         }
-        var person = personRepository.findById(id);
+        var person = personService.findById(id);
         if (person.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Person not found");
         }
@@ -41,7 +42,7 @@ public class PersonController {
             throw new IllegalArgumentException("Invalid password. Length must be more than 5 char");
         }
         return new ResponseEntity<Person>(
-                this.personRepository.save(person),
+                this.personService.save(person),
                 HttpStatus.CREATED
         );
     }
@@ -51,7 +52,7 @@ public class PersonController {
         if (person == null) {
             throw new NullPointerException("Login or password mustn't be empty");
         }
-        this.personRepository.save(person);
+        this.personService.save(person);
         return ResponseEntity.ok().build();
     }
 
@@ -62,7 +63,7 @@ public class PersonController {
         }
         Person person = new Person();
         person.setId(id);
-        this.personRepository.delete(person);
+        this.personService.delete(person);
         return ResponseEntity.ok().build();
     }
 
